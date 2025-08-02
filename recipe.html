@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>📖 My Recipe Saver</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+    input, textarea, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+    }
+    .recipe-card {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+    img {
+      max-width: 300px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🍲 Add Your Recipe</h2>
+  <input type="text" id="name" placeholder="Recipe Name (e.g., Dosa)">
+  <textarea id="steps" placeholder="Preparation Steps..."></textarea>
+  <input type="text" id="image" placeholder="Image URL (optional)">
+  <button onclick="saveRecipe()">➕ Save Recipe</button>
+
+  <h2>📋 Saved Recipes</h2>
+  <div id="recipeList"></div>
+
+  <script>
+    function saveRecipe() {
+      const name = document.getElementById("name").value.trim();
+      const steps = document.getElementById("steps").value.trim();
+      const image = document.getElementById("image").value.trim();
+
+      if (!name || !steps) {
+        alert("Please enter recipe name and steps.");
+        return;
+      }
+
+      const recipe = { name, steps, image };
+      let recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+      recipes.push(recipe);
+      localStorage.setItem("recipes", JSON.stringify(recipes));
+
+      document.getElementById("name").value = "";
+      document.getElementById("steps").value = "";
+      document.getElementById("image").value = "";
+
+      showRecipes();
+    }
+
+    function showRecipes() {
+      const recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+      const list = document.getElementById("recipeList");
+      list.innerHTML = "";
+
+      recipes.forEach((r, i) => {
+        const div = document.createElement("div");
+        div.className = "recipe-card";
+        div.innerHTML = `
+          <h3>${r.name}</h3>
+          <p>${r.steps.replace(/\n/g, "<br>")}</p>
+          ${r.image ? `<img src="${r.image}" alt="Recipe Image">` : ""}
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    // Show recipes on page load
+    showRecipes();
+  </script>
+</body>
+</html>
+
+
+
+
+
